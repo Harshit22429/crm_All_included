@@ -20,7 +20,7 @@ const MainContent = () => {
   useEffect(() => {
     const getLeadsData = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/customer/Junid");
+        const res = await axios.get("http://localhost:8000/customer/Maurya");
         const data = await res.data;
         setLeadsData(data);
       } catch (error) {

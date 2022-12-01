@@ -6,6 +6,9 @@ const dotenv = require('dotenv').config({path:'./config.env'})
 const Port = process.env.PORT
 
 connectDB()
+const cors = require('cors');
+const corsOptions = require('./config/corsOptions');
+app.use(cors(corsOptions));
 app.use(express.json());
 app.get('/', (req,res)=>{
     res.send('Home First page')

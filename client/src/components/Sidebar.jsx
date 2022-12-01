@@ -160,7 +160,7 @@ const Sidebar = ({ children }) => {
           </DrawerHeader>
           <Divider />
 
-          <Box sx={{ overflow: "auto" }}>
+          <Box sx={{ overflow: "hidden" }}>
             <List
               sx={{
                 width: "100%",
@@ -216,7 +216,7 @@ const Sidebar = ({ children }) => {
                   </ListItemButton>
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemText primary="Past Followup Leads" />
-                  </ListItemButton>`      
+                  </ListItemButton>
                   <ListItemButton sx={{ pl: 4 }}>
                     <ListItemText primary="All Leads" />
                   </ListItemButton>

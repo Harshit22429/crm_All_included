@@ -21,7 +21,7 @@ const CustomerFrom = () => {
   const sendCoustomerInfo = async (newCustomer) => {
     try {
       const res = await axios.post(
-        "http://localhost:4000/admin/leads",
+        "http://localhost:8000/customer/admin",
         newCustomer
       );
       console.log(res);
