@@ -18,7 +18,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
-import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import Collapse from "@mui/material/Collapse";
 
 const drawerWidth = 240;
@@ -184,10 +184,10 @@ const Sidebar = ({ children }) => {
                 <ListItemText primary="Drafts" />
               </ListItemButton>
               <ListItemButton onClick={handleSubMenu}>
-                <ListItemIcon>
+                <ListItemIcon sx={{ minWidth: "47px" }}>
                   <InboxIcon sx={{ color: "white" }} />
                 </ListItemIcon>
-                <ListItemText primary="Inbox" />
+                <ListItemText primary="Lead Management" />
                 {subMenu ? (
                   <ExpandLess sx={{ color: "white" }} />
                 ) : (
@@ -197,10 +197,34 @@ const Sidebar = ({ children }) => {
               <Collapse in={subMenu} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemIcon>
-                      <StarBorder sx={{ color: "white" }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Starred" />
+                    <ListItemText primary="Today Work" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="All Fresh" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="All Metting" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="All Followup" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="Past Fresh Leads" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="Future Followup Leads" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="Past Followup Leads" />
+                  </ListItemButton>`      
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="All Leads" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="All Suffle Leads" />
+                  </ListItemButton>
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="50 Days Undisposed Leads" />
                   </ListItemButton>
                 </List>
               </Collapse>

@@ -5,7 +5,14 @@ import {
   InputLabel,
   MenuItem,
   Modal,
+  Paper,
   Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
@@ -64,11 +71,68 @@ const Disposal = ({ data_id }) => {
                 id="demo-simple-select"
                 label="Disposition"
               >
-                <MenuItem value={10}>Call Back</MenuItem>
-                <MenuItem value={20}>Meeting</MenuItem>
-                <MenuItem value={30}>Final Negotiation</MenuItem>
+                <MenuItem value={10}>Tele Metting Done</MenuItem>
+                <MenuItem value={20}>Call Back</MenuItem>
+                <MenuItem value={30}>Final Negotiation (FN) Done</MenuItem>
+                <MenuItem value={30}>Final Negotiation (FN) Planned</MenuItem>
+                <MenuItem value={30}>Final Negotiation (FN) Postponed</MenuItem>
+                <MenuItem value={30}>Metting (F2F) Done</MenuItem>
+                <MenuItem value={30}>Metting (F2F) Planned</MenuItem>
+                <MenuItem value={30}>Metting (F2F) Postponed</MenuItem>
+                <MenuItem value={30}>Not Contactable</MenuItem>
+                <MenuItem value={30}>Not Interested</MenuItem>
+                <MenuItem value={30}>Site Vist (SV) Done</MenuItem>
+                <MenuItem value={30}>Site Vist (SV) Planned</MenuItem>
+                <MenuItem value={30}>Site Vist (SV) Postponed</MenuItem>
               </Select>
             </FormControl>
+            <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }} align="center">
+                      Disposition
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }} align="center">
+                      Sub Disposition
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }} align="center">
+                      Comment
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }} align="center">
+                      Date
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow
+                    key="1"
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row" align="center">
+                      "vk"
+                    </TableCell>
+                    <TableCell align="center">ll</TableCell>
+                    <TableCell align="center">ll</TableCell>
+                    <TableCell align="center">ll</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Button variant="contained" sx={{ marginTop: "80px" }}>
+              Submit
+            </Button>
+
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: "80px", marginLeft: "5px" }}
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              Cancel
+            </Button>
           </Box>
         </Box>
       </Modal>

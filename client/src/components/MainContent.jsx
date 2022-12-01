@@ -20,7 +20,7 @@ const MainContent = () => {
   useEffect(() => {
     const getLeadsData = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/admin");
+        const res = await axios.get("http://localhost:8000/customer/Junid");
         const data = await res.data;
         setLeadsData(data);
       } catch (error) {
@@ -71,7 +71,12 @@ const MainContent = () => {
               {leadsData.map((data) => (
                 <TableRow
                   key={data._id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    "&:hover": {
+                      backgroundColor: "whitesmoke",
+                    },
+                  }}
                 >
                   <TableCell align="center">{data.name}</TableCell>
                   <TableCell align="center">{data.phone}</TableCell>
