@@ -1,14 +1,23 @@
 const { updateOne, deleteOne } = require('../model/cutomer');
 const Customer = require('../model/cutomer');
+const User = require("../model/user");
 
 const createNewCustomer = async(req,res)=>{
     try{
         const {name, phone, salesAgent, project, comment} = req.body;
+        const user= await User.findOne({name:salesAgent});
+        // console.log(user.name);
+        const userName = user?.name
+        
         // const alredyPhone = Customer.find({phone:phone});
         // console.log(alredyPhone)
         // if(alredyPhone){
         //     res.send(`this phone no ${phone} is alredy availiable`)
         // }else{}
+        if(!userName){
+            // alert("Agetn Not found !")
+            return res.status(400).send("User Not Found !")
+        }
         const createdCustomer = await Customer.create({
             name,
             phone,
@@ -17,6 +26,7 @@ const createNewCustomer = async(req,res)=>{
             comment
         })
         res.send(createdCustomer);
+    
     }catch(error){
         console.log(error)
     }

@@ -8,6 +8,10 @@ const createNewUser = async (req, res) => {
         // const uniqueSeq = AutoIncrement(startSeq)
         // const newUserId = name.slice(0, 4) + uniqueSeq;
         // console.log(newUserId);
+
+        if (!name, !userProfile, !email, !phone, !parentId){
+            res.status(404).send('All fields are mandatory !')
+        }
         const userCreated = await User.create({
             name,
             userProfile,
@@ -17,17 +21,17 @@ const createNewUser = async (req, res) => {
         })
         res.send(userCreated);
     } catch (error) {
-        console.log(error.message)
-
+        res.send(error.message)
     }
 }
 
 const updateUser = async (req, res) => {
     try {
-        const userId = req.params.userId
+        const userId = req?.params?.userId
         console.log(userId);
 
         const { email, phone, userProfile } = req.body;
+        if(userId){
         const userUpdated = await User.findOneAndUpdate({ userId: userId }, {
             $set: {
                 email: email,
@@ -36,6 +40,7 @@ const updateUser = async (req, res) => {
             }
         })
         res.send("Successfully Updated");
+    }
     } catch (error) {
         console.log(error.message)
 
@@ -44,17 +49,30 @@ const updateUser = async (req, res) => {
 
 const getAllUser = async (req, res) => {
     try {
-        const parentId = req.params.parentId;
+        const parentId = req?.params?.parentId;
         const userFind = await User.find({ parentId : parentId });
         res.send(userFind);
     } catch (error) {
         console.log(error.message)
     }
 }
+const getAllUserName = async (req, res) =>{
+    try {
+        const parentId = req?.params?.parentId;
+        const userFind = await User.find({parentId: parentId});
+        const getNames = await userFind.map(({name})=> name)
+        // const {user} = userFind;
+        // console.log(user.name)
+        const names= Object.assign({},getNames);       
+        res.send(names)
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 const getUser = async(req,res)=>{
     try{
-        const userId= req.params.userId;
+        const userId= req?.params?.userId;
         const getUser = await User.find({userId:userId})
         res.send(getUser)
     }catch(error){
@@ -64,7 +82,7 @@ const getUser = async(req,res)=>{
 
 const deleteUser = async (req, res) => {
     try {
-        const userID = req.params.userID;
+        const userID = req?.params?.userID;
         const userDelete = await User.findOneAndDelete({ userID: userID });
         res.send(userDelete)
     } catch (error) {
@@ -78,4 +96,5 @@ const deleteUser = async (req, res) => {
 module.exports = { createNewUser,
     updateUser,
     getAllUser,
-    deleteUser };
+    deleteUser,
+    getAllUserName };
