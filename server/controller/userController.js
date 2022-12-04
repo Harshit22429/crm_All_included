@@ -3,25 +3,30 @@ const AutoIncrement = require('mongoose-sequence')
 
 const createNewUser = async (req, res) => {
     try {
-        const { name, userProfile, email, phone, parentId } = req.body;
+        const { name, userProfile, email, phone, password, cPassowrd, parentId } = req.body;
         // const startSeq = 1000;
         // const uniqueSeq = AutoIncrement(startSeq)
         // const newUserId = name.slice(0, 4) + uniqueSeq;
         // console.log(newUserId);
 
-        if (!name, !userProfile, !email, !phone, !parentId){
-            res.status(404).send('All fields are mandatory !')
+        if (!name, !userProfile, !email, !phone, password, cPassowrd, !parentId){
+            return res.status(400).send('All fields are mandatory !')
+            
+        }
+        if(password != cPassowrd){
+            return res?.status(401)?.send('Password should be same !')
         }
         const userCreated = await User.create({
             name,
             userProfile,
             email,
-            phone,            
+            phone,
+            password,            
             parentId
         })
-        res.send(userCreated);
+        res?.send(userCreated);
     } catch (error) {
-        res.send(error.message)
+        res?.send(error?.message)
     }
 }
 
