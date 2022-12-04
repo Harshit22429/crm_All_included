@@ -1,17 +1,46 @@
-import { Button } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const CustomerFrom = () => {
   let navigate = useNavigate();
+  const [salesAgentData, setSalesAgentData] = useState();
+  const [currentSalesAgent, setCurrentSalesagent] = useState();
+
+  const handleChange = (event) => {
+    setCurrentSalesagent(event.target.value);
+  };
+  useEffect(() => {
+    const getSalesAgentData = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/user/admin/getAllAgentName/harsh121"
+        );
+        const data = await res.data;
+        setSalesAgentData(data);
+      } catch (error) {
+        // Handle errors
+        console.log(error);
+      }
+    };
+    getSalesAgentData();
+  }, []);
   const coustomerInfo = (e) => {
     e.preventDefault();
     let newCustomer = {
       name: e.target.userName.value,
       phone: e.target.phoneNo.value,
-      salesAgent: e.target.salesAgent.value,
+      salesAgent: currentSalesAgent,
       project: e.target.project.value,
       comment: e.target.comment.value,
     };
@@ -25,6 +54,7 @@ const CustomerFrom = () => {
         newCustomer
       );
       console.log(res);
+      console.log(newCustomer);
       navigate("/");
     } catch (error) {
       // Handle errors
@@ -34,46 +64,70 @@ const CustomerFrom = () => {
 
   return (
     <Box>
-      <Link to="/">Home</Link>
-      <Box
-        component="form"
-        sx={{
-          "& > :not(style)": { m: 1, width: "25ch" },
-        }}
-        noValidate
-        autoComplete="off"
-        onSubmit={coustomerInfo}
-      >
-        <TextField
-          label="Name"
-          type={"text"}
-          variant="outlined"
-          name="userName"
-        />
-        <TextField
-          type={"text"}
-          label="Phone"
-          variant="outlined"
-          name="phoneNo"
-        />
-        <TextField
-          type={"text"}
-          label="Sales Agent"
-          variant="outlined"
-          name="salesAgent"
-        />
-        <TextField
-          type={"text"}
-          label="Project"
-          variant="outlined"
-          name="project"
-        />
-        <TextField label="Comment" multiline rows={4} name="comment" />
+      <Link to="/Dash/Main">Home</Link>
+      {salesAgentData === undefined ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box
+          component="form"
+          sx={{
+            "& > :not(style)": { m: 1, width: "25ch" },
+          }}
+          noValidate
+          autoComplete="off"
+          onSubmit={coustomerInfo}
+        >
+          <TextField
+            label="Name"
+            type={"text"}
+            variant="outlined"
+            name="userName"
+          />
+          <TextField
+            type={"text"}
+            label="Phone"
+            variant="outlined"
+            name="phoneNo"
+          />
 
-        <Button variant="contained" type="submit">
-          Submit
-        </Button>
-      </Box>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">
+              Select Sales Agent
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={currentSalesAgent}
+              label="Age"
+              onChange={handleChange}
+            >
+              {salesAgentData.map((agent) => (
+                <MenuItem key={agent} value={agent}>
+                  {agent}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <TextField
+            type={"text"}
+            label="Project"
+            variant="outlined"
+            name="project"
+          />
+          <TextField label="Comment" multiline rows={4} name="comment" />
+
+          <Button variant="contained" type="submit">
+            Submit
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

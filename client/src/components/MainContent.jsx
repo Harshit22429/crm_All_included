@@ -20,7 +20,7 @@ const MainContent = () => {
   useEffect(() => {
     const getLeadsData = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/customer/Maurya");
+        const res = await axios.get("http://localhost:8000/customer/admin");
         const data = await res.data;
         setLeadsData(data);
       } catch (error) {
@@ -30,9 +30,10 @@ const MainContent = () => {
     };
     getLeadsData();
   }, []);
+  console.log(leadsData);
   return (
     <Box sx={{ height: 400, width: "100%" }}>
-      <NavLink to="/Form">Home/From</NavLink>
+      <NavLink to="/Dash/Form">Home/From</NavLink>
       {leadsData === undefined ? (
         <Box
           display="flex"

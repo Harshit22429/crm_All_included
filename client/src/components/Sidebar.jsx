@@ -20,6 +20,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import Collapse from "@mui/material/Collapse";
+import { Outlet } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -237,8 +238,7 @@ const Sidebar = ({ children }) => {
         sx={{ flexGrow: 1, p: 3, background: "inherit" }}
       >
         <Toolbar />
-
-        {children}
+        <Outlet />
       </MainContainer>
     </Box>
   );
