@@ -7,7 +7,13 @@ const login = async (req, res) => {
 
     try {
         const { email, password } = req.body;
-        const userLogin = await User.findOne({ email, password })
+        if (!email, !password) return res.status(401).json({message: "all field are mandatory"})
+       
+        const userLogin = await User.findOne({ email})
+        const userAuth =await compare(password, userLogin.password)
+        if(!userAuth){
+            return res.status(400).json({message:"user Password wrong"})
+        }
         const userDetailForFront = {
             name: userLogin.name,
             id: userLogin._id,
@@ -40,7 +46,7 @@ const login = async (req, res) => {
             userLogin.refreshToken = refreshToken
             const result = await userLogin.save();
 
-            console.log(result);
+            // console.log(result);
             res.cookie('userjwt', refreshToken, {
                 httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000

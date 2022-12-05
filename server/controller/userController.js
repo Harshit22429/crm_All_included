@@ -1,27 +1,39 @@
 const User = require("../model/user");
 const AutoIncrement = require('mongoose-sequence')
+const bcrypt= require('bcrypt');
 
 const createNewUser = async (req, res) => {
     try {
-        const { name, userProfile, email, phone, password, cPassowrd, parentId } = req.body;
+        const { name, userPic, email, phone, password, cPassowrd, parentId, roles } = req.body;
         // const startSeq = 1000;
         // const uniqueSeq = AutoIncrement(startSeq)
         // const newUserId = name.slice(0, 4) + uniqueSeq;
         // console.log(newUserId);
-
-        if (!name, !userProfile, !email, !phone, password, cPassowrd, !parentId){
+        if (!name, !userPic, !email, !phone, !password, !cPassowrd, !parentId){
             return res.status(400).send('All fields are mandatory !')
             
         }
         if(password != cPassowrd){
             return res?.status(401)?.send('Password should be same !')
         }
+        // id Duplicate
+        const duplicate = await User.findOne({name , phone , email})
+        if(duplicate) return res.status(409).json({message:"Duplicate User"})
+        const totalUser = await User.find({"roles":"SalesPerson"})
+        console.log(totalUser.length)
+        const startNum = 9999 + totalUser.length +1
+        const nickName = name.slice(0,4) + startNum
+        console.log(nickName)
+        const hashedPwd =await bcrypt.hash(password,10)
+        console.log(hashedPwd)
         const userCreated = await User.create({
             name,
-            userProfile,
+            userPic,
+            userName: nickName,
             email,
             phone,
-            password,            
+            password:hashedPwd, 
+            roles,           
             parentId
         })
         res?.send(userCreated);

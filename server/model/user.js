@@ -10,7 +10,10 @@ const User = new mongoose.Schema({
         type:String,
         required:true
     },
-    userProfile:{
+    userPic:{
+        type:String
+    },
+    userName:{
         type:String
     },
     email:{
@@ -18,7 +21,10 @@ const User = new mongoose.Schema({
         required:true,
         unique:true
     },
-    
+    roles:[{
+        type:String,
+        required:true
+    }],    
     phone:{
         type:Number,
         required:true,

@@ -15,13 +15,14 @@ app.get('/', (req,res)=>{
     res.send('Home First page')
 })
 
-app.use('/customer', require('./router/customerRoute'))
-
 app.use('/user', require('./router/userRoute'))
+
+app.use('/customer', require('./router/customerRoute'))
 
 app.use('/desposition', require('./router/despositionRoute'));
 
 app.use('/user', require('./router/confidential/loginRoute'));
+
 
 app.listen(Port,()=>{
     console.log('server is running')
