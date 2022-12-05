@@ -7,10 +7,16 @@ const login = async (req, res) => {
 
     try {
         const { email, password } = req.body;
-        const userLogin = await User.findOne({
-            email,
-            password
-        })
+        const userLogin = await User.findOne({ email, password })
+        const userDetailForFront = {
+            name: userLogin.name,
+            id: userLogin._id,
+            email: userLogin.email,
+            phone: userLogin.phone,            
+            parentId: userLogin.parentId,
+            userId: userLogin.userId,
+        }
+        console.log(userDetailForFront)
         // console.log(process.env.SECRET_KEY)
         // console.log(userLogin)
         if (userLogin) {
@@ -33,12 +39,13 @@ const login = async (req, res) => {
                 })
             userLogin.refreshToken = refreshToken
             const result = await userLogin.save();
+
             console.log(result);
             res.cookie('userjwt', refreshToken, {
                 httpOnly: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
-            return res.json({ accessToken })
+            return res.json({ accessToken, userDetailForFront })
         }
         else {
             return res.status(400).json({ status: 'error', user: "does not exist" })
@@ -72,7 +79,10 @@ const loginRefresh = (req, res) => {
                 {
                     expiresIn: "1m"
                 })
-            res.json({accessToken})
+            res.json({
+                accessToken,
+                foundUser
+            })
         })
 
 }
