@@ -20,6 +20,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import Collapse from "@mui/material/Collapse";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const drawerWidth = 240;
 
@@ -101,9 +103,11 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const Sidebar = ({ children }) => {
+const Sidebar = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const { auth } = useAuth();
+  const location = useLocation();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -118,7 +122,7 @@ const Sidebar = ({ children }) => {
     setsubMenu(!subMenu);
   };
 
-  return (
+  return auth?.userLogin?.email ? (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <HeaderContainer>
@@ -237,10 +241,11 @@ const Sidebar = ({ children }) => {
         sx={{ flexGrow: 1, p: 3, background: "inherit" }}
       >
         <Toolbar />
-
-        {children}
+        <Outlet />
       </MainContainer>
     </Box>
+  ) : (
+    <Navigate to="/" state={{ from: location }} replace />
   );
 };
 

@@ -40,78 +40,91 @@ const createNewUser = async (req, res) => {
     } catch (error) {
         res?.send(error?.message)
     }
-}
+    if (password != cPassowrd) {
+      return res?.status(401)?.send("Password should be same !");
+    }
+    const userCreated = await User.create({
+      name,
+      userProfile,
+      email,
+      phone,
+      password,
+      parentId,
+    });
+    res?.send(userCreated);
+  };
 
 const updateUser = async (req, res) => {
-    try {
-        const userId = req?.params?.userId
-        console.log(userId);
+  try {
+    const userId = req?.params?.userId;
+    console.log(userId);
 
-        const { email, phone, userProfile } = req.body;
-        if(userId){
-        const userUpdated = await User.findOneAndUpdate({ userId: userId }, {
-            $set: {
-                email: email,
-                phone: phone,
-                userProfile: userProfile
-            }
-        })
-        res.send("Successfully Updated");
+    const { email, phone, userProfile } = req.body;
+    if (userId) {
+      const userUpdated = await User.findOneAndUpdate(
+        { userId: userId },
+        {
+          $set: {
+            email: email,
+            phone: phone,
+            userProfile: userProfile,
+          },
+        }
+      );
+      res.send("Successfully Updated");
     }
-    } catch (error) {
-        console.log(error.message)
-
-    }
-}
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const getAllUser = async (req, res) => {
-    try {
-        const parentId = req?.params?.parentId;
-        const userFind = await User.find({ parentId : parentId });
-        res.send(userFind);
-    } catch (error) {
-        console.log(error.message)
-    }
-}
-const getAllUserName = async (req, res) =>{
-    try {
-        const parentId = req?.params?.parentId;
-        const userFind = await User.find({parentId: parentId});
-        const getNames = await userFind.map(({name})=> name)
-        // const {user} = userFind;
-        // console.log(user.name)
-        const names= Object.assign({},getNames);       
-        res.send(names)
-    } catch (error) {
-        console.log(error.message);
-    }
-}
+  try {
+    const parentId = req?.params?.parentId;
+    const userFind = await User.find({ parentId: parentId });
+    res.send(userFind);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const getAllUserName = async (req, res) => {
+  try {
+    const parentId = req?.params?.parentId;
+    const userFind = await User.find({ parentId: parentId });
+    const getNames = await userFind.map(({ name }) => name);
+    // const {user} = userFind;
+    // console.log(user.name)
+    //const names = Object.assign({}, getNames);
+    res.send(getNames);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-const getUser = async(req,res)=>{
-    try{
-        const userId= req?.params?.userId;
-        const getUser = await User.find({userId:userId})
-        res.send(getUser)
-    }catch(error){
-        console.log(error.message)
-    }
-}
+const getUser = async (req, res) => {
+  try {
+    const userId = req?.params?.userId;
+    const getUser = await User.find({ userId: userId });
+    res.send(getUser);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const deleteUser = async (req, res) => {
-    try {
-        const userID = req?.params?.userID;
-        const userDelete = await User.findOneAndDelete({ userID: userID });
-        res.send(userDelete)
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+  try {
+    const userID = req?.params?.userID;
+    const userDelete = await User.findOneAndDelete({ userID: userID });
+    res.send(userDelete);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-
-
-
-module.exports = { createNewUser,
-    updateUser,
-    getAllUser,
-    deleteUser,
-    getAllUserName };
+module.exports = {
+  createNewUser,
+  updateUser,
+  getAllUser,
+  deleteUser,
+  getAllUserName,
+};

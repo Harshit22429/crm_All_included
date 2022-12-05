@@ -1,8 +1,8 @@
-const User = require('../model/user');
-const jwt = require('jsonwebtoken');
-const user = require('../model/user');
-const dotenv = require('dotenv').config({ path: '../config.env' });
-const { compare } = require('bcryptjs')
+const User = require("../model/user");
+const jwt = require("jsonwebtoken");
+const user = require("../model/user");
+const dotenv = require("dotenv").config({ path: "../config.env" });
+const { compare } = require("bcryptjs");
 const login = async (req, res) => {
 
     try {
@@ -53,29 +53,48 @@ const login = async (req, res) => {
             })
             return res.json({ accessToken, userDetailForFront })
         }
-        else {
-            return res.status(400).json({ status: 'error', user: "does not exist" })
+      
+
+      const refreshToken = jwt.sign(
+        {
+          name: userLogin.name,
+          email: userLogin.email,
+          phone: userLogin.phone,
+        },
+        process.env.REFRESH_SECRET_KEY,
+        {
+          expiresIn: "7d",
         }
-    } catch (error) {
-        res.send(error.message)
-    }
-}
+      );
+      userLogin.refreshToken = refreshToken;
+      const result = await userLogin.save();
+      console.log(result);
+      res.cookie("userjwt", refreshToken, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      return res.json({ accessToken, userLogin });
+    }catch (error) {
+    res.send(error.message);
+  }
+};
 
 const loginRefresh = (req, res) => {
-    const cookies = req.cookies
-    console.log(cookies.userjwt)
-    if (!cookies?.userjwt) return res.status(401).json({ message: "UnAuthorized" })
-    const refreshToken = cookies.userjwt
-    // console.log(cookies.userJWT)
-    console.log(cookies.userjwt)
-    jwt.verify(
-        refreshToken,
-        process.env.REFRESH_SECRET_KEY,
-        async (err, decoded) => {
-            if (err) return res.status(403).json({ message: "Forbidden" })
+  const cookies = req.cookies;
+  console.log(cookies.userjwt);
+  if (!cookies?.userjwt)
+    return res.status(401).json({ message: "UnAuthorized" });
+  const refreshToken = cookies.userjwt;
+  // console.log(cookies.userJWT)
+  console.log(cookies.userjwt);
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_SECRET_KEY,
+    async (err, decoded) => {
+      if (err) return res.status(403).json({ message: "Forbidden" });
 
-            const foundUser = await User.findOne({ name: decoded.name })
-            if (!foundUser) return res.status(401).json({ message: "Unauthorize" })
+      const foundUser = await User.findOne({ name: decoded.name });
+      if (!foundUser) return res.status(401).json({ message: "Unauthorize" });
 
             const accessToken = jwt.sign({
                 name: foundUser.name,
@@ -94,13 +113,17 @@ const loginRefresh = (req, res) => {
 }
 
 const logout = (req, res) => {
-    const cookies = req.cookies
-    if (!cookies?.userjwt) return res.sendStatus(204)
-    res.clearCookie('userjwt', { httpOnly: true, sameSite: "None", secure: true })
-    res.json({ message: "Cookie cleared" })
-}
+  const cookies = req.cookies;
+  if (!cookies?.userjwt) return res.sendStatus(204);
+  res.clearCookie("userjwt", {
+    httpOnly: true,
+    sameSite: "None",
+    secure: true,
+  });
+  res.json({ message: "Cookie cleared" });
+};
 module.exports = {
-    login,
-    loginRefresh,
-    logout
+  login,
+  loginRefresh,
+  logout,
 };
