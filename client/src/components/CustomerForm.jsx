@@ -11,11 +11,13 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const CustomerFrom = () => {
   let navigate = useNavigate();
   const [salesAgentData, setSalesAgentData] = useState();
   const [currentSalesAgent, setCurrentSalesagent] = useState();
+  const { setAuth } = useAuth();
 
   const handleChange = (event) => {
     setCurrentSalesagent(event.target.value);
@@ -28,6 +30,7 @@ const CustomerFrom = () => {
         );
         const data = await res.data;
         setSalesAgentData(data);
+        console.log(data);
       } catch (error) {
         // Handle errors
         console.log(error);
@@ -55,7 +58,16 @@ const CustomerFrom = () => {
       );
       console.log(res);
       console.log(newCustomer);
-      navigate("/");
+      navigate("/Dash/Main");
+    } catch (error) {
+      // Handle errors
+      console.log(error);
+    }
+  };
+  const userSignOut = async () => {
+    setAuth("");
+    try {
+      const res = await axios.post("http://localhost:8000/user/logout");
     } catch (error) {
       // Handle errors
       console.log(error);
@@ -65,6 +77,9 @@ const CustomerFrom = () => {
   return (
     <Box>
       <Link to="/Dash/Main">Home</Link>
+      <Button sx={{ marginLeft: "5px" }} onClick={userSignOut}>
+        Sign Out
+      </Button>
       {salesAgentData === undefined ? (
         <Box
           display="flex"

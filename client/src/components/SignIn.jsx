@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,18 +11,38 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import axios from "axios";
+import useAuth from "../hooks/useAuth";
 
 const theme = createTheme();
 
-export default function SignIn() {
+const SignIn = () => {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const userInfo = {
+      email: event.target.email.value,
+      password: event.target.password.value,
+    };
+
+    sendUserInfo(userInfo);
+  };
+  const sendUserInfo = async (userInfo) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/user/login",
+        userInfo
+      );
+      const data = await res.data;
+      setAuth(data);
+      navigate("/Dash/Main", { replace: true });
+    } catch (error) {
+      // Handle errors
+      console.log(error);
+    }
   };
 
   return (
@@ -99,4 +118,6 @@ export default function SignIn() {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default SignIn;
