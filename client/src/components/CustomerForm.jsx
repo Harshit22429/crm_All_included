@@ -26,7 +26,7 @@ const CustomerFrom = () => {
     const getSalesAgentData = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/user/admin/getAllAgentName/harsh121"
+          "http://localhost:8000/user/admin/getAllAgentName/TL1"
         );
         const data = await res.data;
         setSalesAgentData(data);

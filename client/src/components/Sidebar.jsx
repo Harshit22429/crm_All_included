@@ -122,7 +122,7 @@ const Sidebar = () => {
     setsubMenu(!subMenu);
   };
 
-  return auth?.userLogin?.email ? (
+  return auth?.accessToken ? (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <HeaderContainer>

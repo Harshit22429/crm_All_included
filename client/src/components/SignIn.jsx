@@ -12,13 +12,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
 
 const theme = createTheme();
 
 const SignIn = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -32,19 +33,27 @@ const SignIn = () => {
   };
   const sendUserInfo = async (userInfo) => {
     try {
-      const res = await axios.post(
-        "http://localhost:8000/user/login",
-        userInfo
-      );
+      const res = await axios.post("/user/login", userInfo, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
       const data = await res.data;
       setAuth(data);
+      console.log(data);
       navigate("/Dash/Main", { replace: true });
     } catch (error) {
       // Handle errors
       console.log(error);
     }
   };
+  const togglePersist = () => {
+    setPersist((prev) => !prev);
+    console.log(persist);
+  };
 
+  useEffect(() => {
+    localStorage.setItem("persist", persist);
+  }, [persist]);
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -90,7 +99,13 @@ const SignIn = () => {
               autoComplete="current-password"
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox
+                  checked={persist}
+                  color="primary"
+                  onChange={togglePersist}
+                />
+              }
               label="Remember me"
             />
             <Button

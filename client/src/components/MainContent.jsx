@@ -19,6 +19,7 @@ import useAuth from "../hooks/useAuth";
 const MainContent = () => {
   const [leadsData, setLeadsData] = useState();
   const { setAuth } = useAuth();
+
   useEffect(() => {
     const getLeadsData = async () => {
       try {
@@ -47,6 +48,7 @@ const MainContent = () => {
       <Button sx={{ marginLeft: "5px" }} onClick={userSignOut}>
         Sign Out
       </Button>
+
       {leadsData === undefined ? (
         <Box
           display="flex"
