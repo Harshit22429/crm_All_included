@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import {
-  Button,
   CircularProgress,
   Paper,
   Table,
@@ -14,15 +13,14 @@ import {
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import Disposal from "./Disposal";
-import useAuth from "../hooks/useAuth";
 
 const MainContent = () => {
   const [leadsData, setLeadsData] = useState();
-  const { setAuth } = useAuth();
+
   useEffect(() => {
     const getLeadsData = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/customer/admin");
+        const res = await axios.get("http://localhost:8000/customer/Maurya");
         const data = await res.data;
         setLeadsData(data);
       } catch (error) {
@@ -32,21 +30,9 @@ const MainContent = () => {
     };
     getLeadsData();
   }, []);
-  const userSignOut = async () => {
-    setAuth("");
-    try {
-      const res = await axios.post("http://localhost:8000/user/logout");
-    } catch (error) {
-      // Handle errors
-      console.log(error);
-    }
-  };
   return (
     <Box sx={{ height: 400, width: "100%" }}>
-      <NavLink to="/Dash/Form">Home/From</NavLink>
-      <Button sx={{ marginLeft: "5px" }} onClick={userSignOut}>
-        Sign Out
-      </Button>
+      <NavLink to="/Form">Home/From</NavLink>
       {leadsData === undefined ? (
         <Box
           display="flex"

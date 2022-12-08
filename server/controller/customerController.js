@@ -33,14 +33,6 @@ const createNewCustomer = async(req,res)=>{
 }
 const getAllCustomer = async(req,res)=>{
     try{
-        const customers = await Customer.find({__v:0});
-        res.send(customers);
-    }catch(error){
-        console.log(error.message);
-    }
-}
-const getAgentCustomer = async(req,res)=>{
-    try{
         const salesAgent = req.params.salesAgent
         const customers = await Customer.find({salesAgent:salesAgent});
         res.send(customers);
@@ -77,6 +69,5 @@ module.exports = {
     createNewCustomer,
     getAllCustomer,
     updateCustomer ,
-    deleteCustomer,
-    getAgentCustomer
+    deleteCustomer
     }

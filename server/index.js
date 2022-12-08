@@ -8,7 +8,10 @@ const cookieParser = require('cookie-parser')
 connectDB()
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
+const {logger} = require('./logs/logger')
+const errorHandler = require('./middlewares/errorHandler')
 app.use(cookieParser())
+app.use(logger)
 app.use(cors(corsOptions));
 app.use(express.json());
 app.get('/', (req,res)=>{
@@ -23,7 +26,7 @@ app.use('/desposition', require('./router/despositionRoute'));
 
 app.use('/user', require('./router/confidential/loginRoute'));
 
-
+app.use(errorHandler)
 app.listen(Port,()=>{
     console.log('server is running')
 })

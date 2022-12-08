@@ -4,111 +4,97 @@ const user = require("../model/user");
 const dotenv = require("dotenv").config({ path: "../config.env" });
 const { compare } = require("bcryptjs");
 const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email, !password) return res.status(401).json({ message: "all field are mandatory" })
 
-    try {
-        const { email, password } = req.body;
-        if (!email, !password) return res.status(401).json({message: "all field are mandatory"})
-       
-        const userLogin = await User.findOne({ email})
-        const userAuth =await compare(password, userLogin.password)
-        if(!userAuth){
-            return res.status(400).json({message:"user Password wrong"})
+    const userLogin = await User.findOne({ email })
+    const userAuth = await compare(password, userLogin.password)
+    if (!userAuth) {
+      return res.status(400).json({ message: "user Password wrong" })
+    }
+    const userDetailForFront = {
+      name: userLogin.name,
+      id: userLogin._id,
+      email: userLogin.email,
+      phone: userLogin.phone,
+      parentId: userLogin.parentId,
+      userId: userLogin.userId,
+    }
+    console.log(userDetailForFront)
+    // console.log(process.env.SECRET_KEY)
+    // console.log(userLogin)
+    if (userLogin) {
+      const roles = Object.values(userLogin.roles)
+      const accessToken = jwt.sign({
+        "userInfo": {
+          "name": userLogin.name,
+          "roles": roles
+
         }
-        const userDetailForFront = {
-            name: userLogin.name,
-            id: userLogin._id,
-            email: userLogin.email,
-            phone: userLogin.phone,            
-            parentId: userLogin.parentId,
-            userId: userLogin.userId,
-        }
-        console.log(userDetailForFront)
-        // console.log(process.env.SECRET_KEY)
-        // console.log(userLogin)
-        if (userLogin) {
-            const accessToken = jwt.sign({
-                name: userLogin.name,
-                email: userLogin.email,
-                phone: userLogin.phone
-            }, process.env.SECRET_KEY,
-                {
-                    expiresIn: "1m"
-                })
-
-            const refreshToken = jwt.sign({
-                name: userLogin.name,
-                email: userLogin.email,
-                phone: userLogin.phone
-            }, process.env.REFRESH_SECRET_KEY,
-                {
-                    expiresIn: '7d'
-                })
-            userLogin.refreshToken = refreshToken
-            const result = await userLogin.save();
-
-            // console.log(result);
-            res.cookie('userjwt', refreshToken, {
-                httpOnly: true,
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            })
-            return res.json({ accessToken, userDetailForFront })
-        }
-      
-
-      const refreshToken = jwt.sign(
+      }, process.env.SECRET_KEY,
         {
-          name: userLogin.name,
-          email: userLogin.email,
-          phone: userLogin.phone,
-        },
-        process.env.REFRESH_SECRET_KEY,
-        {
-          expiresIn: "7d",
+          expiresIn: "10m"
+        })
+      const refreshToken = jwt.sign({
+        "userInfo": {
+          "name": userLogin.name
         }
-      );
-      userLogin.refreshToken = refreshToken;
+      }, process.env.REFRESH_SECRET_KEY,
+        {
+          expiresIn: '7d'
+        })
+      userLogin.refreshToken = refreshToken
       const result = await userLogin.save();
-      console.log(result);
-      res.cookie("userjwt", refreshToken, {
+
+      // console.log(result);
+      res.cookie('userjwt', refreshToken, {
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
-      return res.json({ accessToken, userLogin });
-    }catch (error) {
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      })
+      return res.json({ accessToken, userDetailForFront })
+    }
+  } catch (error) {
     res.send(error.message);
   }
 };
 
-const loginRefresh = (req, res) => {
+const loginRefresh = async (req, res) => {
   const cookies = req.cookies;
-  console.log(cookies.userjwt);
+  // console.log(cookies.userjwt);
   if (!cookies?.userjwt)
     return res.status(401).json({ message: "UnAuthorized" });
   const refreshToken = cookies.userjwt;
-  // console.log(cookies.userJWT)
-  console.log(cookies.userjwt);
+  console.log(refreshToken)
+  const foundUser = await User.findOne({refreshToken});
+  if (!foundUser) return res.status(403).json({ message});
+  
+    // console.log(cookies.userjwt, foundUser);
   jwt.verify(
     refreshToken,
     process.env.REFRESH_SECRET_KEY,
     async (err, decoded) => {
-      if (err) return res.status(403).json({ message: "Forbidden" });
+      console.log(foundUser, decoded)
 
-      const foundUser = await User.findOne({ name: decoded.name });
-      if (!foundUser) return res.status(401).json({ message: "Unauthorize" });
+      if (err || foundUser?.name !== decoded.userInfo.name) return res.status(403).json({ message: "Forbidden" });
 
-            const accessToken = jwt.sign({
-                name: foundUser.name,
-                email: foundUser.email,
-                phone: foundUser.phone
-            }, process.env.SECRET_KEY,
-                {
-                    expiresIn: "1m"
-                })
-            res.json({
-                accessToken,
-                foundUser
-            })
+      const roles = Object.values(foundUser.roles)
+
+      const accessToken = jwt.sign({
+        "userInfo": {
+          "name": decoded.name,
+          "roles": roles
+        }
+
+      }, process.env.SECRET_KEY,
+        {
+          expiresIn: "1m"
         })
+      res.json({
+        accessToken,
+        foundUser
+      })
+    })
 
 }
 
