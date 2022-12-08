@@ -21,7 +21,7 @@ const theme = createTheme();
 const SignIn = () => {
   const { setAuth, persist, setPersist } = useAuth();
   const navigate = useNavigate();
-
+  console.log("hello");
   const handleSubmit = (event) => {
     event.preventDefault();
     const userInfo = {
