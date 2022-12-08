@@ -1,20 +1,13 @@
-import {
-  Button,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
 
 const CustomerFrom = () => {
   let navigate = useNavigate();
+<<<<<<< HEAD
+=======
   const [salesAgentData, setSalesAgentData] = useState();
   const [currentSalesAgent, setCurrentSalesagent] = useState();
   const { setAuth } = useAuth();
@@ -38,12 +31,13 @@ const CustomerFrom = () => {
     };
     getSalesAgentData();
   }, []);
+>>>>>>> 85749d3ec343bc9ce56af47f4bf386ba663c1162
   const coustomerInfo = (e) => {
     e.preventDefault();
     let newCustomer = {
       name: e.target.userName.value,
       phone: e.target.phoneNo.value,
-      salesAgent: currentSalesAgent,
+      salesAgent: e.target.salesAgent.value,
       project: e.target.project.value,
       comment: e.target.comment.value,
     };
@@ -57,17 +51,7 @@ const CustomerFrom = () => {
         newCustomer
       );
       console.log(res);
-      console.log(newCustomer);
-      navigate("/Dash/Main");
-    } catch (error) {
-      // Handle errors
-      console.log(error);
-    }
-  };
-  const userSignOut = async () => {
-    setAuth("");
-    try {
-      const res = await axios.post("http://localhost:8000/user/logout");
+      navigate("/");
     } catch (error) {
       // Handle errors
       console.log(error);
@@ -76,73 +60,46 @@ const CustomerFrom = () => {
 
   return (
     <Box>
-      <Link to="/Dash/Main">Home</Link>
-      <Button sx={{ marginLeft: "5px" }} onClick={userSignOut}>
-        Sign Out
-      </Button>
-      {salesAgentData === undefined ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          minHeight="100vh"
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Box
-          component="form"
-          sx={{
-            "& > :not(style)": { m: 1, width: "25ch" },
-          }}
-          noValidate
-          autoComplete="off"
-          onSubmit={coustomerInfo}
-        >
-          <TextField
-            label="Name"
-            type={"text"}
-            variant="outlined"
-            name="userName"
-          />
-          <TextField
-            type={"text"}
-            label="Phone"
-            variant="outlined"
-            name="phoneNo"
-          />
+      <Link to="/">Home</Link>
+      <Box
+        component="form"
+        sx={{
+          "& > :not(style)": { m: 1, width: "25ch" },
+        }}
+        noValidate
+        autoComplete="off"
+        onSubmit={coustomerInfo}
+      >
+        <TextField
+          label="Name"
+          type={"text"}
+          variant="outlined"
+          name="userName"
+        />
+        <TextField
+          type={"text"}
+          label="Phone"
+          variant="outlined"
+          name="phoneNo"
+        />
+        <TextField
+          type={"text"}
+          label="Sales Agent"
+          variant="outlined"
+          name="salesAgent"
+        />
+        <TextField
+          type={"text"}
+          label="Project"
+          variant="outlined"
+          name="project"
+        />
+        <TextField label="Comment" multiline rows={4} name="comment" />
 
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">
-              Select Sales Agent
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={currentSalesAgent}
-              label="Age"
-              onChange={handleChange}
-            >
-              {salesAgentData.map((agent) => (
-                <MenuItem key={agent} value={agent}>
-                  {agent}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <TextField
-            type={"text"}
-            label="Project"
-            variant="outlined"
-            name="project"
-          />
-          <TextField label="Comment" multiline rows={4} name="comment" />
-
-          <Button variant="contained" type="submit">
-            Submit
-          </Button>
-        </Box>
-      )}
+        <Button variant="contained" type="submit">
+          Submit
+        </Button>
+      </Box>
     </Box>
   );
 };

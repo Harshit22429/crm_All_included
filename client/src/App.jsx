@@ -18,7 +18,16 @@ const App = () => {
             <Route path="Form" element={<CustomerFrom />} />
           </Route>
         </Route>
+      <Routes>
+        <Route
+          path="/"
+          element={<Sidebar children={<MainContent />} />}
+        ></Route>
+        <Route path="/Form" element={<Sidebar children={<CustomerFrom />} />} />
       </Routes>
+
+      {/* <Sidebar children={<MainContent />}></Sidebar> */}
+      {/* <Sidebar children={<CustomerFrom />}></Sidebar> */}
     </div>
   );
 };
