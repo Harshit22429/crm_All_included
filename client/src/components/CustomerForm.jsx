@@ -6,6 +6,32 @@ import { Link, useNavigate } from "react-router-dom";
 
 const CustomerFrom = () => {
   let navigate = useNavigate();
+<<<<<<< HEAD
+=======
+  const [salesAgentData, setSalesAgentData] = useState();
+  const [currentSalesAgent, setCurrentSalesagent] = useState();
+  const { setAuth } = useAuth();
+
+  const handleChange = (event) => {
+    setCurrentSalesagent(event.target.value);
+  };
+  useEffect(() => {
+    const getSalesAgentData = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/user/admin/getAllAgentName/TL1"
+        );
+        const data = await res.data;
+        setSalesAgentData(data);
+        console.log(data);
+      } catch (error) {
+        // Handle errors
+        console.log(error);
+      }
+    };
+    getSalesAgentData();
+  }, []);
+>>>>>>> 85749d3ec343bc9ce56af47f4bf386ba663c1162
   const coustomerInfo = (e) => {
     e.preventDefault();
     let newCustomer = {

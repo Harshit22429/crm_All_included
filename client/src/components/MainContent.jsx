@@ -16,6 +16,10 @@ import Disposal from "./Disposal";
 
 const MainContent = () => {
   const [leadsData, setLeadsData] = useState();
+<<<<<<< HEAD
+=======
+  const { setAuth } = useAuth();
+>>>>>>> 85749d3ec343bc9ce56af47f4bf386ba663c1162
 
   useEffect(() => {
     const getLeadsData = async () => {
@@ -32,7 +36,15 @@ const MainContent = () => {
   }, []);
   return (
     <Box sx={{ height: 400, width: "100%" }}>
+<<<<<<< HEAD
       <NavLink to="/Form">Home/From</NavLink>
+=======
+      <NavLink to="/Dash/Form">Home/From</NavLink>
+      <Button sx={{ marginLeft: "5px" }} onClick={userSignOut}>
+        Sign Out
+      </Button>
+
+>>>>>>> 85749d3ec343bc9ce56af47f4bf386ba663c1162
       {leadsData === undefined ? (
         <Box
           display="flex"

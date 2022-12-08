@@ -118,7 +118,11 @@ const Sidebar = ({ children }) => {
     setsubMenu(!subMenu);
   };
 
+<<<<<<< HEAD
   return (
+=======
+  return auth?.accessToken ? (
+>>>>>>> 85749d3ec343bc9ce56af47f4bf386ba663c1162
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <HeaderContainer>

@@ -80,6 +80,24 @@ const loginRefresh = async (req, res) => {
 
       const roles = Object.values(foundUser.roles)
 
+      const accessToken = jwt.sign(
+        {
+          name: foundUser.name,
+          email: foundUser.email,
+          phone: foundUser.phone,
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "1m",
+        }
+      );
+      res.json({
+        accessToken,
+        foundUser,
+      });
+    }
+  );
+};
       const accessToken = jwt.sign({
         "userInfo": {
           "name": decoded.name,
